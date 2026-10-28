@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vouchers
+      POSTGRES_USER: voucher_user
+      POSTGRES_PASSWORD: change_this_database_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8080:8000"
+    environment:
+      PORT: 8000
+      DATABASE_URL: postgresql://voucher_user:change_this_database_password@db:5432/vouchers
+      SECRET_KEY: CHANGE_THIS_TO_A_LONG_RANDOM_SECRET
+      ADMIN_USERNAME: admin
+      ADMIN_INITIAL_PASSWORD: CHANGE_ME_NOW
+      ADMIN_DISPLAY_NAME: مدير النظام
+      COOKIE_SECURE: "0"
+volumes:
+  postgres_data:
