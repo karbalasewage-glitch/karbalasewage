@@ -1,86 +1,65 @@
+نسخة GitHub Pages + Supabase الحقيقية
+=====================================
 
-ملاحظة إصلاح Windows / Python 3.15
-=================================
-تم إصلاح RUN_LOCAL.bat بحيث لا يعتبر نجاح pip خطأً بسبب قراءة ERRORLEVEL داخل كتلة الأوامر.
-إذا ظهرت عبارة Successfully installed في النسخة السابقة، فالمكتبات مثبتة بالفعل؛ شغّل RUN_LOCAL.bat في هذه النسخة وسيقوم بالتحقق منها ثم يبدأ النظام مباشرة.
+هذه الحزمة هي التي ترفع إلى GitHub Pages. لا ترفع ملفات Flask القديمة معها.
 
-مهم - التشغيل المحلي على Windows
-================================
-- شغّل RUN_LOCAL.bat فقط.
-- التشغيل المحلي يستخدم SQLite ولا يحتاج PostgreSQL ولا pg_config ولا psycopg.
-- ملف requirements-local.txt مخصص للحاسبة المحلية.
-- ملف requirements.txt مخصص للنشر Online/Docker ويحتوي PostgreSQL driver.
-- إذا ظهر لك سابقاً خطأ pg_config executable not found فهذا الإصدار يعالجه بفصل متطلبات التشغيل المحلي عن متطلبات الخادم.
+1) في GitHub احذف من المستودع القديم خصوصاً:
+   secret.key
+   vouchers_online.db
+   app.py
+   Dockerfile
+   requirements.txt
+   requirements-local.txt
+   docker-compose*.yml
+   RUN_LOCAL.*
+   Procfile
+   ملفات .env
 
-نظام مديرية مجاري كربلاء / شعبة التدقيق - نسخة ONLINE متعددة المستخدمين
-====================================================================
+2) ارفع محتويات هذه الحزمة إلى جذر المستودع:
+   index.html
+   app.js
+   style.css
+   supabase-config.js
+   .nojekyll
+   assets/logo.png
+   SUPABASE_SETUP.sql (يمكن إبقاؤه أو حذفه بعد الإعداد)
 
-أهم ما في هذه النسخة
--------------------
-1) مدير النظام (admin): جميع الصلاحيات، إدارة المستخدمين، إعادة تعيين كلمات المرور، الاستعادة DB.
-2) إدخال وتعديل (editor): إضافة/تعديل/حذف الشركات والوصولات، الاستيراد، التقارير والمخططات.
-3) مشاهدة فقط (viewer): عرض البيانات والتقارير والمخططات والطباعة والتصدير فقط. لا يستطيع الإضافة أو التعديل أو الحذف حتى من خلال API.
-4) كل مستخدم يستطيع تغيير كلمة مروره من صفحة «حسابي» بعد إدخال كلمة المرور الحالية.
-5) مدير النظام يستطيع إعادة تعيين كلمة مرور أي مستخدم وتغيير صلاحيته أو تعطيل حسابه.
-6) كلمات المرور مخزنة كـ PBKDF2 hash ولا تحفظ كنص واضح.
-7) عند تغيير/إعادة تعيين كلمة المرور يتم إبطال الجلسات القديمة للحساب.
-8) حماية CSRF، Cookies HttpOnly/SameSite، وصلاحيات تفحص على الخادم.
-9) يدعم PostgreSQL عند النشر Online، وSQLite للتجربة المحلية.
-10) يحتفظ باسم المستخدم الذي أنشأ/عدّل الوصل، مع Audit Log على الخادم.
+3) في Supabase > SQL Editor شغّل SUPABASE_SETUP.sql كاملاً.
 
-التشغيل المحلي للتجربة
-----------------------
-- يتطلب Python 3.10+ وإنترنت أول مرة لتنزيل المكتبات.
-- شغّل RUN_LOCAL.bat.
-- عند عدم وضع متغيرات بيئة، الحساب المحلي الأول:
-  username: admin
-  password: 12345678
-- غيّر كلمة المرور فور الدخول من «حسابي».
+4) في Supabase > Authentication > Users أنشئ حساب المدير بالبريد وكلمة المرور.
 
-النشر Online الموصى به
-----------------------
-الخيار الموصى به لخادم Linux/VPS هو Docker Compose:
-1) انسخ .env.production.example إلى .env وعدّل القيم السرية.
-2) استخدم docker-compose.prod.yml للإنتاج.
-3) أو استخدم docker-compose.yml للتجربة المحلية.
-4) قبل التشغيل عدّل:
-   - كلمة مرور PostgreSQL.
-   - SECRET_KEY إلى قيمة طويلة عشوائية.
-   - ADMIN_INITIAL_PASSWORD إلى كلمة قوية.
-5) شغّل للإنتاج:
-   docker compose -f docker-compose.prod.yml --env-file .env up -d --build
-6) يستمع التطبيق محلياً على 127.0.0.1:8080 فقط.
-7) اربط نطاقاً بالخادم واستخدم Nginx/Apache كـ reverse proxy.
-8) فعّل HTTPS بشهادة TLS. نسخة الإنتاج تضبط COOKIE_SECURE=1.
-9) لا تفتح منفذ PostgreSQL للعامة.
+5) في SQL Editor اجعل الحساب مديراً:
+   update public.profiles
+   set role='admin', display_name='مدير النظام'
+   where email='karbala.sewage@gmail.com';
 
-متغيرات البيئة المهمة
-----------------------
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME
-SECRET_KEY=قيمة طويلة عشوائية
-ADMIN_USERNAME=admin
-ADMIN_INITIAL_PASSWORD=كلمة مرور أولية قوية
-ADMIN_DISPLAY_NAME=مدير النظام
-COOKIE_SECURE=1 عند استخدام HTTPS
-PORT=8000
+6) من Supabase انسخ:
+   Project URL
+   Publishable Key
+   ثم افتح supabase-config.js في GitHub وضعهما مكان القيم PASTE_...
+   لا تضع Secret Key أو service_role في GitHub.
 
-نقل بيانات النسخة الحالية إلى Online
-------------------------------------
-- من النسخة المحمولة: صدّر ملف DB.
-- في النسخة Online: سجّل الدخول كمدير > النسخ الاحتياطي > استعادة DB.
-- الاستعادة تستبدل الشركات والوصولات، لكنها لا تحذف مستخدمي النظام Online.
-- يمكن كذلك استيراد Excel من صفحة الوصولات.
+7) GitHub > Repository > Settings > Pages:
+   Source = Deploy from a branch
+   Branch = main
+   Folder = /(root)
+   Save
 
-النسخ الاحتياطي
----------------
-- Excel: /backup.xlsx
-- CSV: /export.csv
-- DB كامل للشركات والوصولات: /backup.db (للمدير)
+8) Supabase > Authentication > URL Configuration:
+   Site URL = رابط GitHub Pages
+   Redirect URLs = نفس الرابط مع /* في النهاية عند الحاجة.
 
-ملاحظات أمنية مهمة قبل فتح النظام للعامة
------------------------------------------
-- غيّر كل كلمات المرور الافتراضية.
-- استخدم HTTPS فقط.
-- استخدم SECRET_KEY عشوائياً ولا ترفعه إلى Git.
-- خذ نسخة DB/Excel دورية واحفظها خارج الخادم.
-- يفضل تقييد الوصول إلى النظام بعناوين IP/VPN إذا كان الاستخدام داخلياً للمديرية.
+9) افتح رابط GitHub Pages وسجل الدخول ببريد المدير وكلمة المرور.
+
+إنشاء مستخدم جديد:
+- Supabase > Authentication > Users > Add user.
+- سيظهر تلقائياً في صفحة المستخدمين داخل البرنامج بدور Viewer.
+- من حساب المدير غيّر دوره إلى Editor أو Admin عند الحاجة.
+
+الصلاحيات:
+Admin  : كل شيء + إدارة الأدوار والحالة والاستعادة.
+Editor : الشركات والوصولات والتقارير والمخططات.
+Viewer : مشاهدة وتقارير ومخططات فقط.
+
+مهم جداً:
+إذا كان secret.key الذي رفعته سابقاً يحتوي قيمة حقيقية، اعتبره مكشوفاً ولا تستخدمه مرة أخرى.

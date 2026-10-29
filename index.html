@@ -1,61 +1,36 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>مديرية مجاري كربلاء / شعبة التدقيق</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#173969">
+  <title>مديرية مجاري كربلاء / شعبة التدقيق</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<div id="loginLayer"></div>
 <div id="toast" class="toast"></div>
-<div class="shell">
+<div id="loginLayer"></div>
+<div class="shell hidden" id="shell">
   <aside class="sidebar">
-    <div class="brand">
-      <div class="logo"><img src="/static/assets/logo.png" alt="الشعار"></div>
-      <div>
-        <b>مديرية مجاري كربلاء</b>
-        <small>شعبة التدقيق</small>
-      </div>
-    </div>
-
-    <div class="sidebar-panel">
-      <div class="sidebar-title">النظام الإلكتروني</div>
-      <div class="sidebar-sub">إدارة الشركات والوصولات والتقارير</div>
-    </div>
-
+    <div class="brand"><img src="./assets/logo.png" alt="الشعار"><div><b>مديرية مجاري كربلاء</b><small>شعبة التدقيق</small></div></div>
     <nav>
       <button data-page="dashboard" class="active">⌂ <span>لوحة التحكم</span></button>
       <button data-page="companies">▦ <span>الشركات</span></button>
-      <button data-page="vouchers">▤ <span>الوصولات والسجلات</span></button>
+      <button data-page="receipts">▤ <span>الوصولات والسجلات</span></button>
       <button data-page="reports">◫ <span>تقرير شركة</span></button>
       <button data-page="charts">◒ <span>المخططات</span></button>
       <button data-page="backup">↻ <span>النسخ الاحتياطي</span></button>
       <button data-page="users" class="admin-only">♙ <span>المستخدمون</span></button>
       <button data-page="account">⚙ <span>حسابي</span></button>
-      <button data-page="rules">✓ <span>قواعد التحقق</span></button>
     </nav>
-
-    <div class="sidefoot">
-      <div>مديرية مجاري كربلاء / شعبة التدقيق</div>
-      <small>تم تصميم هذا البرنامج في شعبة تكنولوجيا المعلومات</small>
-    </div>
+    <div class="sidefoot"><b>شعبة تكنولوجيا المعلومات</b><small>تم تصميم هذا البرنامج في شعبة تكنولوجيا المعلومات</small></div>
   </aside>
-
   <main>
-    <header>
-      <div>
-        <div class="mini-badge">نظام إلكتروني آمن</div>
-        <h1 id="pageTitle">لوحة التحكم</h1>
-        <p id="pageSub">ملخص مباشر لحركة الوصولات وصرفيات الشركات</p>
-      </div>
-      <div id="headerActions"></div>
-    </header>
+    <header><div><span class="badge">GitHub Pages + Supabase</span><h1 id="pageTitle">لوحة التحكم</h1><p id="pageSub"></p></div><div id="headerActions"></div></header>
     <section id="view"></section>
   </main>
 </div>
-
-<div id="modal" class="modal hidden"><div class="modal-card"><button class="modal-close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
-<script src="/static/app.js"></script>
+<div id="modal" class="modal hidden"><div class="modal-card"><button class="modal-close" id="modalClose">×</button><div id="modalBody"></div></div></div>
+<script type="module" src="./app.js"></script>
 </body>
 </html>
